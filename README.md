@@ -46,10 +46,11 @@ bash
 Copy
 Edit
 Paramatrix-AECTech-/
-├── pipeline.py             # Main script: images → mesh → parametric model
-├── requirements.txt        # Python dependencies
-├── README.md               # (That’s this file!)
-└── experiments/            # Experimental scripts & test data
+├── pipeline.py        
+├── requirements.txt     
+├── README.md      
+└── experiments/
+
 🎯 Goals & Roadmap
 Current Goal: Seamlessly convert multi-view images to a clean parametric 3D model with user-set parameters.
 
