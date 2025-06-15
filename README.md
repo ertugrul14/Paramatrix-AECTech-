@@ -55,10 +55,14 @@ Paramatrix-AECTech-/
 └── experiments/
 
 🎯 Goals & Roadmap
+
 Current Goal: Seamlessly convert multi-view images to a clean parametric 3D model with user-set parameters.
 
 
 👥 Acknowledgements
-Built during AECTech Hackathon Barcelona 2025 by the Abdellah Choufani, Eleni Papakosta, Ertuğrul Akdemir, Michele Cobelli, Carmine A. Rago. Special thanks to the organizers and mentors!
+
+Built during AECTech Hackathon Barcelona 2025 by the Abdellah Choufani, Eleni Papakosta, Ertuğrul Akdemir, Michele Cobelli, Carmine A. Rago. 
+
+Special thanks to the organizers and mentors!
 
 PARAMETRIX focuses on 3D parametric creation from images accessible—experiment, customize, and build your next 3D‑powered application!
