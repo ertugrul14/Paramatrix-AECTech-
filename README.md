@@ -17,18 +17,30 @@ A suite of experiments in the repo exploring techniques.
 Clone the Repo
 
 bash
+
 Copy
+
 Edit
+
 git clone https://github.com/ertugrul14/Paramatrix-AECTech-.git
+
 cd Paramatrix-AECTech-
+
 Install Dependencies
+
 Install Python dependencies (adjust for your environment):
 
+
 bash
+
 Copy
+
 Edit
+
 pip install -r requirements.txt
+
 Run the Pipeline
+
 Feed your images and generate the parametric 3D model:
 
 🧪 Methodology & Experiments
