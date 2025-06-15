@@ -1,5 +1,7 @@
 Paramatrix – Image to Parametric 3D Modeling 🧩
-Paramatrix is a methodology developed during the AECTech Hackathon Barcelona 2025 that converts sets of photographs into fully parametric 3D models. Powered by Huanyuan 3D v2, it bridges the gap between 3D mesh reconstruction and custom parametric modeling—giving users creative control from image input to adjustable output.
+
+Paramatrix is a methodology developed during the AECTech Hackathon Barcelona 2025 that converts sets of photographs into fully parametric 3D models. 
+Powered by Huanyuan 3D v2, it bridges the gap between 3D mesh reconstruction and custom parametric modeling—giving users creative control from image input to adjustable output.
 
 🔍 Features
 Photo-to-3D Mesh
