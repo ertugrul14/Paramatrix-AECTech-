@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Parametric Tower – JS Export</title>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; }
+    #output { margin-top: 1em; white-space: pre-wrap; background: #f7f7f7; padding: 1em; }
+  </style>
+</head>
+<body>
+  <h1>Parametric Tower – JS Export</h1>
+
+  <form method="POST" enctype="multipart/form-data">
+    <input type="file" name="image" accept="image/*" required />
+    <button type="submit">Upload & Run Pipeline</button>
+  </form>
+
+  {% if js_code %}
+    <h2>Generated <code>tower_sketch.js</code></h2>
+    <div id="output">{{ js_code }}</div>
+
+    <h2>Live Preview</h2>
+    <!-- Inject the newly generated script -->
+    <script src="/static/tower_sketch.js"></script>
+  {% endif %}
+</body>
+</html>
