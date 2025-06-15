@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload and Pipeline Execution</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        .container {
+            display: flex;
+            gap: 20px;
+        }
+        .upload-section-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .upload-section {
+            width: 400px;
+            height: 400px;
+            border-radius: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 5px;
+            background-color: #e0e0e0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .upload-section img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .run-button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 10px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .run-button:hover {
+            background-color: #0056b3;
+        }
+        .output-section {
+            width: 800px;
+            height: 800px;
+            border-radius: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        input[type="file"] {
+            display: none; /* Hide the file input */
+        }
+        .sliders {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .slider-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 400px;
+        }
+        .slider-container label {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Upload Section -->
+        <div class="upload-section-container">
+            <div class="upload-section" onclick="triggerFileDialog()">
+                <!-- Images will be displayed here -->
+            </div>
+            <input type="file" id="image-upload" multiple accept="image/*" onchange="handleFileUpload(event)">
+            <button class="run-button" onclick="runPipeline()">Run</button>
+
+            <!-- Slider Section -->
+            <div class="sliders">
+                <!-- Global Sliders -->
+                <div class="slider-container">
+                    <label for="slider-x">Scale X:</label>
+                    <input type="range" id="slider-x" min="10" max="300" value="100" onchange="sendSliderValues()">
+                </div>
+                <div class="slider-container">
+                    <label for="slider-y">Scale Y:</label>
+                    <input type="range" id="slider-y" min="10" max="300" value="100" onchange="sendSliderValues()">
+                </div>
+                <div class="slider-container">
+                    <label for="slider-z">Scale Z:</label>
+                    <input type="range" id="slider-z" min="10" max="300" value="100" onchange="sendSliderValues()">
+                </div>
+
+                <!-- Facade Sliders -->
+                <div class="slider-container">
+                    <label for="slider-posx">Stretch +X Facade:</label>
+                    <input type="range" id="slider-posx" min="10" max="300" value="100" onchange="sendSliderValues()">
+                </div>
+                <div class="slider-container">
+                    <label for="slider-negx">Stretch -X Facade:</label>
+                    <input type="range" id="slider-negx" min="10" max="300" value="100" onchange="sendSliderValues()">
+                </div>
+                <div class="slider-container">
+                    <label for="slider-posy">Stretch +Y Facade:</label>
+                    <input type="range" id="slider-posy" min="10" max="300" value="100" onchange="sendSliderValues()">
+                </div>
+                <div class="slider-container">
+                    <label for="slider-negy">Stretch -Y Facade:</label>
+                    <input type="range" id="slider-negy" min="10" max="300" value="100" onchange="sendSliderValues()">
+                </div>
+            </div>
+        </div>
+
+        <!-- Output Section -->
+        <div class="output-section" id="output-section">
+            <img id="visualization" src="" alt="Visualization Output">
+        </div>
+    </div>
+
+    <script>
+        let uploadedFiles = []; // Store uploaded files
+
+        function triggerFileDialog() {
+            // Trigger the hidden file input dialog
+            document.getElementById('image-upload').click();
+        }
+
+        function handleFileUpload(event) {
+            const uploadSection = document.querySelector('.upload-section');
+            uploadSection.innerHTML = ''; // Clear previous images
+            const files = event.target.files;
+
+            uploadedFiles = Array.from(files); // Store the uploaded files
+
+            if (files.length > 4) {
+                alert("Only the first 4 images will be displayed.");
+            }
+
+            Array.from(files).slice(0, 4).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    uploadSection.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function runPipeline() {
+            if (uploadedFiles.length === 0) {
+                alert("Please upload images before running the pipeline.");
+                return;
+            }
+
+            // Save uploaded images to the specified directory
+            const saveDirectory = "D:\\AECTech_bcn\\Hunyuan3D-2-main\\assets\\example_mv_images\\16";
+            for (const file of uploadedFiles) {
+                const formData = new FormData();
+                formData.append("file", file);
+
+                await fetch("http://127.0.0.1:5000/save-images", {
+                    method: "POST",
+                    body: formData,
+                });
+            }
+
+            // Trigger the pipeline.py script
+            const pipelineEndpoint = "http://127.0.0.1:5000/run-pipeline";
+            await fetch(pipelineEndpoint, {
+                method: "POST",
+            });
+
+            // Fetch and display the visualization
+            await fetchVisualization();
+
+            alert("Pipeline executed successfully!");
+        }
+
+        
+        async function fetchSliderValues() {
+            try {
+                const response = await fetch("http://127.0.0.1:5000/get-slider-values");
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const sliderValues = await response.json();
+                console.log("Slider Values:", sliderValues);
+                // Update sliders or visualization based on slider values
+            } catch (error) {
+                console.error("Failed to fetch slider values:", error);
+            }
+        }
+
+        // Call fetchSliderValues only when needed
+        document.getElementById("slider-x").addEventListener("change", fetchSliderValues);
+        document.getElementById("slider-y").addEventListener("change", fetchSliderValues);
+        document.getElementById("slider-z").addEventListener("change", fetchSliderValues);
+
+        async function sendSliderValues() {
+            const sliderValues = {
+                X: document.getElementById("slider-x").value,
+                Y: document.getElementById("slider-y").value,
+                Z: document.getElementById("slider-z").value,
+                "Stretch +X Facade": document.getElementById("slider-posx").value,
+                "Stretch -X Facade": document.getElementById("slider-negx").value,
+                "Stretch +Y Facade": document.getElementById("slider-posy").value,
+                "Stretch -Y Facade": document.getElementById("slider-negy").value,
+            };
+
+            await fetch("http://127.0.0.1:5000/update-sliders", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(sliderValues),
+            });
+
+            console.log("Slider values sent:", sliderValues);
+        }
+
+        async function fetchVisualization() {
+            const visualizationEndpoint = "http://127.0.0.1:5000/get-visualization";
+            const visualizationImg = document.getElementById("visualization");
+            visualizationImg.src = visualizationEndpoint + "?t=" + new Date().getTime(); // Prevent caching
+        }
+    </script>
+</body>
+</html>
